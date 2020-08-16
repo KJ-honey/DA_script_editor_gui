@@ -43,7 +43,7 @@ class WindowClass(QMainWindow, form_class) :
             self.statusBar().showMessage('This is not a ID03831')
             return
         myfunc.IDspsi_Import(self.inf,self.texts)
-        print(self.texts[0])
+        #print(self.texts[0])
         self.statusBar().showMessage('Save complete')
         QMessageBox.information(self, 'Information', "Save complete", QMessageBox.Ok,QMessageBox.Ok)
 
@@ -144,7 +144,7 @@ class WindowClass(QMainWindow, form_class) :
                 #print(myfunc.str_to_bin(i,2))
             num=0
             #self.text.clear()
-            currentName=myfunc.speakerNameIntToStr(self.listName[self.itemNumber])
+            currentName=self.listName[self.itemNumber]
             self.speakerName.setPlainText(currentName)
             #print(self.listName[self.itemNumber])
         self.currentText.setPlainText(self.itemscript)

@@ -27,15 +27,16 @@ def test():
         for i in range(len(speakerAndDialogs[0])):
             outfp.write(speakerAndDialogs[0][i]+'\n')
 
-def speakerNameIntToStr(Int):
-    pathCsv = '오프셋별화자이름.xlsx'
-    df=pd.read_excel(pathCsv,names=['None','offset','name'])
-    df=df[df['offset'].isin([Int])]
+def speakerNameIntToStr(Int,df):
     Int=str(Int)
-    if not len(df)==0:
-        df.index=[0]
-        offset=str(df['offset'][0])
-        Int=Int.replace(offset,df['name'][0])
+    Int=Int.replace('1011','타이치')
+    Int=Int.replace('9003','아나운서')
+    '''
+    for i in df.index:
+        offsetDf=str(df['offset'][i])
+        nameDf=df['name'][i]
+        Int=Int.replace(offsetDf,nameDf)
+        '''
     return Int
 def IDspsi_GetlistOffset_ex(fp):
     numOfScripts=278
@@ -196,6 +197,9 @@ def script_extract(headerList,dialogNum,inf):
     count=0
     texts = ''
     dialogs=[[],[]]
+    
+    pathCsv = '오프셋별화자이름.xlsx'
+    df=pd.read_excel(pathCsv,names=['None','offset','name'])
     for h,d in zip(headerList,dialogNum):
         inf.seek(h)
         inf.seek(8,1)
@@ -208,7 +212,7 @@ def script_extract(headerList,dialogNum,inf):
         dialogOffsets=[]
         speaker=[]
         for i in range(d):                  #대사 오프셋 리스트 작성
-            name=speakerNameIntToStr(int.from_bytes(bytes=inf.read(2),byteorder='little'))
+            name=speakerNameIntToStr(int.from_bytes(bytes=inf.read(2),byteorder='little'),df)
             dialogs[0].append(name)
             inf.seek(18,1)
             dialogOffsets.append(int.from_bytes(bytes=inf.read(2),byteorder='little'))
@@ -232,8 +236,8 @@ def script_extract(headerList,dialogNum,inf):
                     break
                 except IndexError:
                     break
-    print(len(dialogs[1][1]))
-    print(dialogs[1][1])
+    #print(len(dialogs[1][1]))
+    #print(dialogs[1][1])
     return dialogs
 
 def script_import_gui(headerList,dialogNum,texts,inf):
