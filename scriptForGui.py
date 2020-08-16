@@ -31,6 +31,7 @@ def speakerNameIntToStr(Int,df):
     Int=str(Int)
     Int=Int.replace('1011','타이치')
     Int=Int.replace('9003','아나운서')
+    
     '''
     for i in df.index:
         offsetDf=str(df['offset'][i])
