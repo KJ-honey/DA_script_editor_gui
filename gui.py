@@ -13,6 +13,9 @@ class WindowClass(QMainWindow, form_class) :
         self.setupUi(self)
         self.fileNumber=3520
         self.statusBar().showMessage('Ready')
+
+        self.btn_save.setDisabled(True)
+        self.btn_insert.setDisabled(True)
         #ListWidget의 시그널
         self.fileList.itemClicked.connect(self.clicked_script_name)
         self.fileList.currentItemChanged.connect(self.clicked_script_name)
@@ -172,6 +175,9 @@ class WindowClass(QMainWindow, form_class) :
         self.speakerAndDialogs=myfunc.script_extract(self.headerList,self.dialogNum,self.inf) 
         self.texts=self.speakerAndDialogs[1]
         self.fileList.setCurrentRow(0)
+        
+        self.btn_save.setEnabled(True)
+        self.btn_insert.setEnabled(True)
     def clicked_btn_open_spsi(self):
         self.switcgMode='spsi'
         self.fileList.clear()

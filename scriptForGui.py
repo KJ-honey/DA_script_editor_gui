@@ -245,9 +245,9 @@ def script_extract(headerList,dialogNum,inf):
                     else:
                         length=dialogOffsets[i+1]-dialogOffsets[i]
                         text=inf.read(length)
-                        length=text.find(b'\x00')
-                        #if not length == -1:
-                            #text=text[0:length]
+                        length=text.find(b'\x00\x00')
+                        if not length == -1:
+                            text=text[0:length]
                     dialogs[1].append(text)
                     break
                 except IndexError:
