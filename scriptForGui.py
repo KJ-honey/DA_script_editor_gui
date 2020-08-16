@@ -26,7 +26,26 @@ def test():
         outfp=open('names.txt','w+')
         for i in range(len(speakerAndDialogs[0])):
             outfp.write(speakerAndDialogs[0][i]+'\n')
+def dataExtractorForISO(pathIso,pathFile):
+    isoFp=open(pathIso,'rb')
+    isoFp.seek(379666432)
+    data=isoFp.read(2034592)
+    isoFp.close()
+    
+    saveFp=open(pathfile,'wb')
+    saveFp.write(data)
+    saveFp.close()
+def dataImportForISO(pathIso,pathFile):
+    fpIso = open(pathIso,'rb+')
+    fpFile = open(pathFile,'rb')
+    
+    data = fpFile.read()
+    fpFile.close()
 
+    fpIso.seek(379666432)
+    fpIso.write(data)
+    fpIso.close()
+    
 def speakerNameIntToStr(Int,df): 
     try:
         name = df.loc[Int,'name']
