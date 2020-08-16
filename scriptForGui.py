@@ -28,10 +28,14 @@ def test():
             outfp.write(speakerAndDialogs[0][i]+'\n')
 
 def speakerNameIntToStr(Int):
-    Int=str(Int)
     pathCsv = '오프셋별화자이름.xlsx'
-    pd.read_excel(pathCsv)
-    for 
+    df=pd.read_excel(pathCsv,names=['None','offset','name'])
+    df=df[df['offset'].isin([Int])]
+    Int=str(Int)
+    if not len(df)==0:
+        df.index=[0]
+        offset=str(df['offset'][0])
+        Int=Int.replace(offset,df['name'][0])
     return Int
 def IDspsi_GetlistOffset_ex(fp):
     numOfScripts=278
