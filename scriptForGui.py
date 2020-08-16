@@ -28,13 +28,13 @@ def test():
             outfp.write(speakerAndDialogs[0][i]+'\n')
 
 def speakerNameIntToStr(Int,df):
-    Int=str(Int)
-    Int=Int.replace('1011','타이치')
-    Int=Int.replace('9003','아나운서')
+    newDf=df[df['offset'].isin([Int])]
     
-    for i in df.index:
-        offsetDf=str(df['offset'][i])
-        nameDf=df['name'][i]
+    Int=str(Int)
+    if not len(newDf)==0:
+        newDf.index=[0]
+        offsetDf=str(newDf['offset'][0])
+        nameDf=newDf['name'][0]
         Int=Int.replace(offsetDf,nameDf)
 
     return Int
