@@ -27,16 +27,13 @@ def test():
         for i in range(len(speakerAndDialogs[0])):
             outfp.write(speakerAndDialogs[0][i]+'\n')
 
-def speakerNameIntToStr(Int,df):
-    newDf=df[df['offset'].isin([Int])]
-    
-    Int=str(Int)
-    if not len(newDf)==0:
-        newDf.index=[0]
-        offsetDf=str(newDf['offset'][0])
-        nameDf=newDf['name'][0]
-        Int=Int.replace(offsetDf,nameDf)
-
+def speakerNameIntToStr(Int,df): 
+    try:
+        name = df.loc[Int,'name']
+        Int=str(Int)
+        Int=Int.replace(Int,name)
+    except:
+        Int=str(Int)
     return Int
 def IDspsi_GetlistOffset_ex(fp):
     numOfScripts=278
@@ -199,7 +196,7 @@ def script_extract(headerList,dialogNum,inf):
     dialogs=[[],[]]
     
     pathCsv = '오프셋별화자이름.xlsx'
-    df=pd.read_excel(pathCsv,names=['None','offset','name'])
+    df=pd.read_excel(pathCsv,names=['None','offset','name'],index_col='offset')
     for h,d in zip(headerList,dialogNum):
         inf.seek(h)
         inf.seek(8,1)
