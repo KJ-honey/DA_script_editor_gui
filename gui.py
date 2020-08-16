@@ -16,6 +16,14 @@ class WindowClass(QMainWindow, form_class) :
 
         self.btn_save.setDisabled(True)
         self.btn_insert.setDisabled(True)
+        self.actioninsert.setDisabled(True)
+        self.actionSave.setDisabled(True)
+        self.actionSaveAs.setDisabled(True)
+        self.actionSave_ID3841.setDisabled(True)
+        self.actioninsert.setDisabled(True)
+        self.actionNextText.setDisabled(True)
+        self.actionPrevText.setDisabled(True)
+        #self.action.setDisabled(True)
         #ListWidget의 시그널
         self.fileList.itemClicked.connect(self.clicked_script_name)
         self.fileList.currentItemChanged.connect(self.clicked_script_name)
@@ -37,10 +45,28 @@ class WindowClass(QMainWindow, form_class) :
         self.actionNextText.triggered.connect(self.Next_text)
         self.actionPrevText.triggered.connect(self.Prev_text)
         self.actionexit.triggered.connect(qApp.quit)
-
+        self.actionExtract_bin_from_ISO.triggered.connect(self.clicked_extract_iso)
+        self.actionImport_bin_to_ISO.triggered.connect(self.clicked_import_iso)
         self.statusBar()
 
     #ListWidget의 시그널에 연결된 함수들
+    def clicked_extract_iso(self):
+        binfilter="bin files (*.bin);;All files (*.*)"
+        isofilter="iso files (*.iso);;All files (*.*)"
+        pathIso=QFileDialog.getOpenFileName(self,'Open to...','./',isofilter,"iso files (*.iso)")[0]
+        if pathIso=='':
+            return 0
+        pathBin=QFileDialog.getSaveFileName(self,'Save as...','./',binfilter,"bin files (*.bin)")[0]
+        if pathBin=='':
+            return 0
+        myfunc.dataExtractorForISO(pathIso,pathBin)
+    def clicked_import_iso(self):
+        myfilter="iso files (*.iso);;All files (*.*)"
+        binfilter="bin files (*.bin);;All files (*.*)"
+        pathBin=QFileDialog.getOpenFileName(self,'Open as...','./',binfilter,"bin files (*.bin)")[0]
+        pathIso=QFileDialog.getSaveFileName(self,'Save as...','./',isofilter,"iso files (*.iso)")[0]
+        myfunc.dataImportForISO(pathIso,pathBin)
+
     def clicked_save_spsi(self):
         if self.switcgMode!='spsi':
             self.statusBar().showMessage('This is not a ID03831')
@@ -64,7 +90,7 @@ class WindowClass(QMainWindow, form_class) :
             return       
         myfilter="Bin files (*.bin);;All files (*.*)"
         savename=QFileDialog.getSaveFileName(self,'Save as...','./',myfilter,"Bin files (*.bin)")[0]
-        outf=open(savename,'rb+')
+        outf=open(savename,'wb')
         self.inf.seek(0)
         outf.write(self.inf.read())
         outf.seek(0)
@@ -156,14 +182,20 @@ class WindowClass(QMainWindow, form_class) :
 
     #버튼 함수
     def clicked_btn_open(self):
-        self.switcgMode='script'
+        self.currentText.clear()
+        self.editText.clear()
+        self.scriptsList.clear()
+        self.speakerName.clear()
         self.fileList.clear()
         self.headerList=[]
         self.dialogNum=[]
         self.texts=[]
+        self.switcgMode='script'
 
-        #self.filename = QFileDialog.getOpenFileName(self)[0]
-        self.filename='onlytext_test1.bin'
+        self.filename = QFileDialog.getOpenFileName(self)[0]
+        #self.filename='onlytext_test1.bin'
+        if self.filename=='':
+            return 0
         self.inf = open(self.filename,'rb+')
         self.data=self.inf.read()
 
@@ -178,6 +210,12 @@ class WindowClass(QMainWindow, form_class) :
         
         self.btn_save.setEnabled(True)
         self.btn_insert.setEnabled(True)
+        self.actioninsert.setEnabled(True)
+        self.actionSave.setEnabled(True)
+        self.actionSaveAs.setEnabled(True)
+        self.actioninsert.setEnabled(True)
+        self.actionNextText.setEnabled(True)
+        self.actionPrevText.setEnabled(True)
     def clicked_btn_open_spsi(self):
         self.switcgMode='spsi'
         self.fileList.clear()

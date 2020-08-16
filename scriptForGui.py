@@ -32,7 +32,7 @@ def dataExtractorForISO(pathIso,pathFile):
     data=isoFp.read(2034592)
     isoFp.close()
     
-    saveFp=open(pathfile,'wb')
+    saveFp=open(pathFile,'wb')
     saveFp.write(data)
     saveFp.close()
 def dataImportForISO(pathIso,pathFile):

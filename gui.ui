@@ -208,8 +208,16 @@
     <addaction name="actionNextText"/>
     <addaction name="actionPrevText"/>
    </widget>
+   <widget class="QMenu" name="menuTool">
+    <property name="title">
+     <string>Tool</string>
+    </property>
+    <addaction name="actionExtract_bin_from_ISO"/>
+    <addaction name="actionImport_bin_to_ISO"/>
+   </widget>
    <addaction name="menufile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuTool"/>
    <addaction name="menuother"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -282,6 +290,16 @@
   <action name="actionSave_ID3841">
    <property name="text">
     <string>Save ID3841</string>
+   </property>
+  </action>
+  <action name="actionExtract_bin_from_ISO">
+   <property name="text">
+    <string>Extract bin from ISO</string>
+   </property>
+  </action>
+  <action name="actionImport_bin_to_ISO">
+   <property name="text">
+    <string>Import bin to ISO</string>
    </property>
   </action>
  </widget>
