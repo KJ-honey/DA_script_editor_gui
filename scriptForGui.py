@@ -32,12 +32,11 @@ def speakerNameIntToStr(Int,df):
     Int=Int.replace('1011','타이치')
     Int=Int.replace('9003','아나운서')
     
-    '''
     for i in df.index:
         offsetDf=str(df['offset'][i])
         nameDf=df['name'][i]
         Int=Int.replace(offsetDf,nameDf)
-        '''
+
     return Int
 def IDspsi_GetlistOffset_ex(fp):
     numOfScripts=278
