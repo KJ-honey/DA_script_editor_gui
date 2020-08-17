@@ -11,7 +11,7 @@ class WindowClass(QMainWindow, form_class) :
     def __init__(self) :
         super().__init__()
         self.setupUi(self)
-        self.fileNumber=3520
+        self.firstFileNumber=3520
         self.statusBar().showMessage('Ready')
 
         self.btn_save.setDisabled(True)
@@ -63,7 +63,7 @@ class WindowClass(QMainWindow, form_class) :
     def clicked_import_iso(self):
         myfilter="iso files (*.iso);;All files (*.*)"
         binfilter="bin files (*.bin);;All files (*.*)"
-        pathBin=QFileDialog.getOpenFileName(self,'Open as...','./',binfilter,"bin files (*.bin)")[0]
+        pathBin=QFileDialog.getOpenFileName(self,'Open to...','./',binfilter,"bin files (*.bin)")[0]
         pathIso=QFileDialog.getSaveFileName(self,'Save as...','./',isofilter,"iso files (*.iso)")[0]
         myfunc.dataImportForISO(pathIso,pathBin)
 
@@ -123,7 +123,7 @@ class WindowClass(QMainWindow, form_class) :
     def clicked_script_name(self):
         while True:
             try:
-                self.scriptName=int(self.fileList.currentItem().text())-self.fileNumber
+                self.scriptName=int(self.fileList.currentItem().text())-self.firstFileNumber
                 break
             except:
                 break
@@ -135,7 +135,7 @@ class WindowClass(QMainWindow, form_class) :
         self.listName=[]
         if self.switcgMode=='spsi':
             for i in range(len(self.texts)):
-                self.scriptsList.addItem(self.texts[i])#myfunc.str_to_bin(self.texts[i],2))
+                self.scriptsList.addItem(self.texts[i])
         else:
             for i in range(self.dialogNum[self.scriptName]):
                 num=str(num)
@@ -148,7 +148,7 @@ class WindowClass(QMainWindow, form_class) :
 
                 num=int(num)+1
             self.scriptsList.setCurrentRow(0)
-            self.statusBar().showMessage('Script number %d is loaded'%(self.scriptName+self.fileNumber))
+            self.statusBar().showMessage('Script number %d is loaded'%(self.scriptName+self.firstFileNumber))
     
     def clicked_script(self):
         if self.switcgMode=='spsi':
@@ -192,7 +192,8 @@ class WindowClass(QMainWindow, form_class) :
         self.texts=[]
         self.switcgMode='script'
 
-        self.filename = QFileDialog.getOpenFileName(self)[0]
+        binfilter="bin files (*.bin);;All files (*.*)"
+        self.filename = QFileDialog.getOpenFileName(self,'Open to...','./',binfilter,"bin files (*.bin)")[0]
         #self.filename='onlytext_test1.bin'
         if self.filename=='':
             return 0
@@ -203,7 +204,7 @@ class WindowClass(QMainWindow, form_class) :
         self.dialogNum=myfunc.dialog_num(self.headerList,self.data)
 
         for i in range(len(self.dialogNum)):
-            self.fileList.addItem(str(i+self.fileNumber))
+            self.fileList.addItem(str(i+self.firstFileNumber))
         self.speakerAndDialogs=myfunc.script_extract(self.headerList,self.dialogNum,self.inf) 
         self.texts=self.speakerAndDialogs[1]
         self.fileList.setCurrentRow(0)
