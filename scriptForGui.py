@@ -171,7 +171,8 @@ def find_header(find_str,data):
     return findOffset
 
 def str_to_bin(string_,sw):
-    pathTbl='tbl.txt'
+    pathDir=os.getcwd()
+    pathTbl=pathDir+'\\tbl.txt'
     tbl=open(pathTbl,'r',encoding='utf-16')
     kor=tbl.readline()
     jpn=tbl.readline()
@@ -213,8 +214,8 @@ def script_extract(headerList,dialogNum,inf):
     count=0
     texts = ''
     dialogs=[[],[]]
-    
-    pathCsv = '오프셋별화자이름.xlsx'
+    pathDir=os.getcwd()
+    pathCsv =pathDir+ '\\오프셋별화자이름.xlsx'
     df=pd.read_excel(pathCsv,names=['None','offset','name'],index_col='offset')
     for h,d in zip(headerList,dialogNum):
         inf.seek(h)

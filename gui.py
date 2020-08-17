@@ -5,7 +5,8 @@ from PyQt5.QtGui import *
 from PyQt5 import uic
 import scriptForGui as myfunc
 
-form_class = uic.loadUiType("gui.ui")[0]
+pathDir=os.getcwd()
+form_class = uic.loadUiType(pathDir+'\\gui.ui')[0]
 
 class WindowClass(QMainWindow, form_class) :
     def __init__(self) :
@@ -54,17 +55,17 @@ class WindowClass(QMainWindow, form_class) :
         binfilter="bin files (*.bin);;All files (*.*)"
         isofilter="iso files (*.iso);;All files (*.*)"
         pathIso=QFileDialog.getOpenFileName(self,'Open to...','./',isofilter,"iso files (*.iso)")[0]
-        if pathIso=='':
-            return 0
+        if pathIso=='':return 0
         pathBin=QFileDialog.getSaveFileName(self,'Save as...','./',binfilter,"bin files (*.bin)")[0]
-        if pathBin=='':
-            return 0
+        if pathBin=='':return 0
         myfunc.dataExtractorForISO(pathIso,pathBin)
     def clicked_import_iso(self):
         myfilter="iso files (*.iso);;All files (*.*)"
         binfilter="bin files (*.bin);;All files (*.*)"
         pathBin=QFileDialog.getOpenFileName(self,'Open to...','./',binfilter,"bin files (*.bin)")[0]
+        if pathIso=='':return 0
         pathIso=QFileDialog.getSaveFileName(self,'Save as...','./',isofilter,"iso files (*.iso)")[0]
+        if pathBin=='':return 0
         myfunc.dataImportForISO(pathIso,pathBin)
 
     def clicked_save_spsi(self):
@@ -90,7 +91,8 @@ class WindowClass(QMainWindow, form_class) :
             return       
         myfilter="Bin files (*.bin);;All files (*.*)"
         savename=QFileDialog.getSaveFileName(self,'Save as...','./',myfilter,"Bin files (*.bin)")[0]
-        outf=open(savename,'wb')
+        if savename=='':return 0
+        outf=open(savename,'wb+')
         self.inf.seek(0)
         outf.write(self.inf.read())
         outf.seek(0)
@@ -182,6 +184,8 @@ class WindowClass(QMainWindow, form_class) :
 
     #버튼 함수
     def clicked_btn_open(self):
+        try:self.inf.close()
+        except:pass
         self.currentText.clear()
         self.editText.clear()
         self.scriptsList.clear()
@@ -195,8 +199,7 @@ class WindowClass(QMainWindow, form_class) :
         binfilter="bin files (*.bin);;All files (*.*)"
         self.filename = QFileDialog.getOpenFileName(self,'Open to...','./',binfilter,"bin files (*.bin)")[0]
         #self.filename='onlytext_test1.bin'
-        if self.filename=='':
-            return 0
+        if self.filename=='':return 0
         self.inf = open(self.filename,'rb+')
         self.data=self.inf.read()
 
@@ -217,11 +220,15 @@ class WindowClass(QMainWindow, form_class) :
         self.actioninsert.setEnabled(True)
         self.actionNextText.setEnabled(True)
         self.actionPrevText.setEnabled(True)
+
     def clicked_btn_open_spsi(self):
+        try:self.inf.close()
+        except:pass
         self.switcgMode='spsi'
         self.fileList.clear()
         self.texts=[]
         self.filename = QFileDialog.getOpenFileName(self)[0]
+        if self.filename=='':return 0
         #self.filename = 'ID03841'
         self.fileList.addItem(self.filename)
         self.inf=open(self.filename,'rb+')
