@@ -59,6 +59,7 @@ class WindowClass(QMainWindow, form_class) :
         pathBin=QFileDialog.getSaveFileName(self,'Save as...','./',binfilter,"bin files (*.bin)")[0]
         if pathBin=='':return 0
         myfunc.dataExtractorForISO(pathIso,pathBin)
+        
     def clicked_import_iso(self):
         myfilter="iso files (*.iso);;All files (*.*)"
         binfilter="bin files (*.bin);;All files (*.*)"
@@ -69,7 +70,7 @@ class WindowClass(QMainWindow, form_class) :
         myfunc.dataImportForISO(pathIso,pathBin)
 
     def clicked_save_spsi(self):
-        if self.switcgMode!='spsi':
+        if self.switchMode!='spsi':
             self.statusBar().showMessage('This is not a ID03831')
             return
         myfunc.IDspsi_Import(self.inf,self.texts)
@@ -78,7 +79,7 @@ class WindowClass(QMainWindow, form_class) :
         QMessageBox.information(self, 'Information', "Save complete", QMessageBox.Ok,QMessageBox.Ok)
 
     def clicked_btn_save(self): 
-        if self.switcgMode!='script':
+        if self.switchMode!='script':
             self.statusBar().showMessage('This is not a scriptfile')
             return       
         myfunc.script_import_gui(self.headerList,self.dialogNum,self.texts,self.inf)
@@ -86,7 +87,7 @@ class WindowClass(QMainWindow, form_class) :
         QMessageBox.information(self, 'Information', "Save complete", QMessageBox.Ok,QMessageBox.Ok)
 
     def save_as(self):        
-        if self.switcgMode!='script':
+        if self.switchMode!='script':
             self.statusBar().showMessage('This is not a scriptfile')
             return       
         myfilter="Bin files (*.bin);;All files (*.*)"
@@ -106,7 +107,7 @@ class WindowClass(QMainWindow, form_class) :
         self.currentText.setPlainText(self.typingText)
         currentRow=self.scriptsList.currentRow()
         self.scriptsList.takeItem(currentRow)
-        if self.switcgMode=='spsi':
+        if self.switchMode=='spsi':
             self.scriptsList.insertItem(currentRow,self.typingText)
             self.texts[currentRow]=self.typingText
             self.statusBar().showMessage('Insert complete')
@@ -135,7 +136,7 @@ class WindowClass(QMainWindow, form_class) :
         self.scriptsList.clear()
         self.speakerName.clear()
         self.listName=[]
-        if self.switcgMode=='spsi':
+        if self.switchMode=='spsi':
             for i in range(len(self.texts)):
                 self.scriptsList.addItem(self.texts[i])
         else:
@@ -153,7 +154,7 @@ class WindowClass(QMainWindow, form_class) :
             self.statusBar().showMessage('Script number %d is loaded'%(self.scriptName+self.firstFileNumber))
     
     def clicked_script(self):
-        if self.switcgMode=='spsi':
+        if self.switchMode=='spsi':
             while True:
                 try:
                     self.itemscript=self.scriptsList.currentItem().text()
@@ -194,7 +195,7 @@ class WindowClass(QMainWindow, form_class) :
         self.headerList=[]
         self.dialogNum=[]
         self.texts=[]
-        self.switcgMode='script'
+        self.switchMode='script'
 
         binfilter="bin files (*.bin);;All files (*.*)"
         self.filename = QFileDialog.getOpenFileName(self,'Open to...','./',binfilter,"bin files (*.bin)")[0]
@@ -224,7 +225,7 @@ class WindowClass(QMainWindow, form_class) :
     def clicked_btn_open_spsi(self):
         try:self.inf.close()
         except:pass
-        self.switcgMode='spsi'
+        self.switchMode='spsi'
         self.fileList.clear()
         self.texts=[]
         self.filename = QFileDialog.getOpenFileName(self)[0]
