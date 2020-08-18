@@ -4,6 +4,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5 import uic
 import scriptForGui as myfunc
+import os
 
 pathDir=os.getcwd()
 form_class = uic.loadUiType(pathDir+'\\gui.ui')[0]
@@ -185,22 +186,19 @@ class WindowClass(QMainWindow, form_class) :
 
     #버튼 함수
     def clicked_btn_open(self):
-        try:self.inf.close()
-        except:pass
-        self.currentText.clear()
-        self.editText.clear()
-        self.scriptsList.clear()
-        self.speakerName.clear()
-        self.fileList.clear()
-        self.headerList=[]
-        self.dialogNum=[]
-        self.texts=[]
-        self.switchMode='script'
 
         binfilter="bin files (*.bin);;All files (*.*)"
         self.filename = QFileDialog.getOpenFileName(self,'Open to...','./',binfilter,"bin files (*.bin)")[0]
         #self.filename='onlytext_test1.bin'
-        if self.filename=='':return 0
+        if self.filename=='':return 0        
+        try:self.inf.close()
+        except:pass
+        self.headerList=[]
+        self.dialogNum=[]
+        self.texts=[]
+        self.clearWindow()
+        self.switchMode='script'
+
         self.inf = open(self.filename,'rb+')
         self.data=self.inf.read()
 
@@ -213,21 +211,17 @@ class WindowClass(QMainWindow, form_class) :
         self.texts=self.speakerAndDialogs[1]
         self.fileList.setCurrentRow(0)
         
-        self.btn_save.setEnabled(True)
-        self.btn_insert.setEnabled(True)
-        self.actioninsert.setEnabled(True)
-        self.actionSave.setEnabled(True)
-        self.actionSaveAs.setEnabled(True)
-        self.actioninsert.setEnabled(True)
-        self.actionNextText.setEnabled(True)
-        self.actionPrevText.setEnabled(True)
+        self.enableMenus()
+
 
     def clicked_btn_open_spsi(self):
         try:self.inf.close()
         except:pass
-        self.switchMode='spsi'
-        self.fileList.clear()
+        self.clearWindow()
+        self.headerList=[]
+        self.dialogNum=[]
         self.texts=[]
+        self.switchMode='spsi'
         self.filename = QFileDialog.getOpenFileName(self)[0]
         if self.filename=='':return 0
         #self.filename = 'ID03841'
@@ -236,7 +230,23 @@ class WindowClass(QMainWindow, form_class) :
         self.texts=myfunc.IDspsi_Extract(self.inf)
         #self.scriptslist.addItem()
         self.fileList.setCurrentRow(0)
-
+    def clearWindow(self):
+        self.currentText.clear()
+        self.editText.clear()
+        self.scriptsList.clear()
+        self.speakerName.clear()
+        self.fileList.clear()
+    def disableMenus(self):
+        self.setdisabled(True)
+    def enableMenus(self):
+        self.btn_save.setEnabled(True)
+        self.btn_insert.setEnabled(True)
+        self.actioninsert.setEnabled(True)
+        self.actionSave.setEnabled(True)
+        self.actionSaveAs.setEnabled(True)
+        self.actioninsert.setEnabled(True)
+        self.actionNextText.setEnabled(True)
+        self.actionPrevText.setEnabled(True)
     def Next_text(self):
         self.scriptsList.setCurrentRow(self.scriptsList.currentRow()+1)
     def Prev_text(self):
