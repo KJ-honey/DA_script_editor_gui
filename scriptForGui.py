@@ -3,11 +3,13 @@ import sys
 import pandas as pd
 import re
 def main():
-    print(str_to_bin("Test str2bin mode 1 : 아아아아뷁",1))
+    print(str_to_bin("Test str2bin mode 1 : 아아아아뷁",1,1))
     filename1='onlytext_test1.bin'
     filename2='testExtBin.bin'
-    test(filename1)
-    test(filename2)    
+    #test(filename1)
+    #test(filename2)
+    valTest=True
+    print (1 if valTest else 0 )    
 def test(fn):
         switcgMode='script'
         headerList=[]
@@ -28,7 +30,7 @@ def test(fn):
         testStr=speakerAndDialogs[1][1000]
         print(testStr)
         print(str_to_bin(testStr,2))
-        
+
 def dataExtractorForISO(pathIso,pathFile):
     isoFp=open(pathIso,'rb')
     isoFp.seek(379666432)
@@ -173,7 +175,7 @@ def find_header(find_str,data):
         count+=1
     return findOffset
 
-def str_to_bin(string_,sw):
+def str_to_bin(string_,sw,shiftjis):
     pathDir=os.getcwd()
     pathTbl=pathDir+'\\tbl.txt'
     tbl=open(pathTbl,'r',encoding='utf-16')
@@ -183,20 +185,34 @@ def str_to_bin(string_,sw):
         try:
             if sw==1:                                               # Str to Bin : 입력기에서 사용
                 string_=string_.replace('\n','&')
-                string_=string_.translate(str.maketrans(
-                    kor+'&①②③',
-                    jpn+'＆１２３'))
+                string_=string_.translate(str.maketrans(kor+'&①②③',jpn+'＆１２３'))
                 string_=bytes(string_,'shift-jis',errors='replace')#'ignore')
-                string_=string_.replace(b'\x81\x95',b'\xff\x80')
+                string_=string_.replace(b'\x81\x95',b'\xff\x80')    # &을 개행코드로
+                string_=string_.replace(b'\x25\x30',b'\xFF\x00')    # 후리가나 종료코드
+                string_=string_.replace(b'\x25\x31',b'\xFF\x41')
+                string_=string_.replace(b'\x25\x32',b'\xFF\x42')
+                string_=string_.replace(b'\x25\x33',b'\xFF\x43')
+                string_=string_.replace(b'\x25\x34',b'\xFF\x44')
+                string_=string_.replace(b'\x25\x35',b'\xFF\x45')
+                string_=string_.replace(b'\x25\x36',b'\xFF\x46')
+                string_=string_.replace(b'\x25\x37',b'\xFF\x47')
+                string_=string_.replace(b'\x25\x38',b'\xFF\x48')
+                string_=string_.replace(b'\x25\x39',b'\xFF\x49')
                 return string_
             elif sw==2:                                             # Bin to Str : 출력기에서 사용
                 string_=string_.replace(b'\xFF\x80',b'\x81\x95')    # 개행을 전각&으로 출력
-                string_=string_.replace(b'\xFF\x44',b'\x81\x83')    # 이하 < or >
-                string_=string_.replace(b'\xFF\x42',b'\x81\x83')
-                string_=string_.replace(b'\xFF\x40',b'\x81\x84')
-                string_=string_.replace(b'\xFF\x00',b'\x81\x84')
+                string_=string_.replace(b'\xFF\x00',b'\x25\x30')    # 이하 < or >
+                string_=string_.replace(b'\xFF\x41',b'\x25\x31')
+                string_=string_.replace(b'\xFF\x42',b'\x25\x32')
+                string_=string_.replace(b'\xFF\x43',b'\x25\x33')
+                string_=string_.replace(b'\xFF\x44',b'\x25\x34')
+                string_=string_.replace(b'\xFF\x45',b'\x25\x35')
+                string_=string_.replace(b'\xFF\x46',b'\x25\x36')
+                string_=string_.replace(b'\xFF\x47',b'\x25\x37')
+                string_=string_.replace(b'\xFF\x48',b'\x25\x38')
+                string_=string_.replace(b'\xFF\x49',b'\x25\x39')
                 string_=str(string_,encoding='shift-jis',errors='replace')#'ignore')
-                string_=string_.translate(str.maketrans(jpn,kor))
+                if shiftjis==0:string_=string_.translate(str.maketrans(jpn,kor))
                 string_=string_.replace('＆','\n')
                 string_=string_.replace('&','\n')
                 string_=string_.replace('+','…')
@@ -218,7 +234,7 @@ def script_extract(headerList,dialogNum,inf):
     texts = ''
     dialogs=[[],[]]
     pathDir=os.getcwd()
-    pathCsv =pathDir+ '\\오프셋별화자이름.xlsx'
+    pathCsv =pathDir+ '\\SpeakerNamesByOffset.xlsx'
     df=pd.read_excel(pathCsv,names=['None','offset','name'],index_col='offset')
     for h,d in zip(headerList,dialogNum):
         inf.seek(h)
@@ -300,7 +316,6 @@ def script_import_gui(headerList,dialogNum,texts,inf):
             while True:
                 try:
                     text=texts[count+i]
-                    #text=str_to_bin(text,1)
                     break
                 except LookupError or IndexError:
                     print('i = %d, d= %d, Offset= %s, text= %s'%(i,d,inf.tell(),texts[count+i-1]))
@@ -315,14 +330,6 @@ def script_import_gui(headerList,dialogNum,texts,inf):
         #print(inf.tell())
         for i in range(d):
             text=texts[count+i]
-            while True:
-                try:
-                    #text=str_to_bin(text,1)
-                    break
-                except LookupError:
-                    print(inf.tell())
-                    print(text)
-                    exit()
             inf.write(text)
             #print(inf.read(10))
             inf.write(b'\x00')

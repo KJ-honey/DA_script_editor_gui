@@ -171,6 +171,19 @@
      <string>Script list</string>
     </property>
    </widget>
+   <widget class="QCheckBox" name="shiftJis">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>30</y>
+      <width>101</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Shift-jis mode</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -198,6 +211,7 @@
     <property name="title">
      <string>Other</string>
     </property>
+    <addaction name="actionmode_Change"/>
     <addaction name="actionHelp"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -300,6 +314,14 @@
   <action name="actionImport_bin_to_ISO">
    <property name="text">
     <string>Import bin to ISO</string>
+   </property>
+  </action>
+  <action name="actionmode_Change">
+   <property name="text">
+    <string>Mode change</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Tab</string>
    </property>
   </action>
  </widget>

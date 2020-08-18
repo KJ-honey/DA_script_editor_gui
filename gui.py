@@ -9,7 +9,7 @@ import os
 pathDir=os.getcwd()
 form_class = uic.loadUiType(pathDir+'\\gui.ui')[0]
 
-class WindowClass(QMainWindow, form_class) :
+class scriptPacker(QMainWindow, form_class) :
     def __init__(self) :
         super().__init__()
         self.setupUi(self)
@@ -37,7 +37,7 @@ class WindowClass(QMainWindow, form_class) :
         self.btn_open.clicked.connect(self.clicked_btn_open)
         self.btn_insert.clicked.connect(self.insertText)
         self.btn_save.clicked.connect(self.clicked_btn_save)
-
+        self.shiftJis.stateChanged.connect(self.chk_change)
 
         #액션 연결
         self.actionopen.triggered.connect(self.clicked_btn_open)
@@ -51,9 +51,15 @@ class WindowClass(QMainWindow, form_class) :
         self.actionexit.triggered.connect(qApp.quit)
         self.actionExtract_bin_from_ISO.triggered.connect(self.clicked_extract_iso)
         self.actionImport_bin_to_ISO.triggered.connect(self.clicked_import_iso)
+        self.actionmode_Change.triggered.connect(self.chk_changing)
         self.statusBar()
 
     #ListWidget의 시그널에 연결된 함수들
+    def chk_changing(self):
+        self.shiftJis.setChecked(False if self.shiftJis.isChecked() else True)
+    def chk_change(self):
+        self.fileList.setCurrentRow(self.fileList.currentRow()+1)
+        self.fileList.setCurrentRow(self.fileList.currentRow()-1)
     def clicked_extract_iso(self):
         binfilter="bin files (*.bin);;All files (*.*)"
         isofilter="iso files (*.iso);;All files (*.*)"
@@ -123,7 +129,7 @@ class WindowClass(QMainWindow, form_class) :
             self.scriptsList.insertItem(int(currentRow),currentRow+'. '+self.typingText)
             iNum=sum(self.dialogNum[0:self.scriptName])+int(currentRow)
 
-            self.texts[iNum]=myfunc.str_to_bin(self.typingText,1)
+            self.texts[iNum]=myfunc.str_to_bin(self.typingText,1,1 if self.shiftJis.isChecked() else 0)
             self.statusBar().showMessage('Insert complete')
 
     def clicked_script_name(self):
@@ -149,7 +155,7 @@ class WindowClass(QMainWindow, form_class) :
                     if len(str(num))<3:
                         num='0'+num
                 self.iNum=i+sum(self.dialogNum[0:self.scriptName])
-                self.scriptsList.addItem(num+'. '+myfunc.str_to_bin(self.texts[self.iNum],2))
+                self.scriptsList.addItem(num+'. '+myfunc.str_to_bin(self.texts[self.iNum],2,1 if self.shiftJis.isChecked() else 0))
                 self.listName.append(self.speakerAndDialogs[0][self.iNum])
 
                 num=int(num)+1
@@ -188,7 +194,6 @@ class WindowClass(QMainWindow, form_class) :
 
     #버튼 함수
     def clicked_btn_open(self):
-
         binfilter="bin files (*.bin);;All files (*.*)"
         self.filename = QFileDialog.getOpenFileName(self,'Open to...','./',binfilter,"bin files (*.bin)")[0]
         #self.filename='onlytext_test1.bin'
@@ -261,6 +266,6 @@ if __name__ == "__main__" :
     print("Start gui for dgmAd psp scripter")
     
     app = QApplication(sys.argv)
-    myWindow = WindowClass()
+    myWindow = scriptPacker()
     myWindow.show()
     app.exec_()
