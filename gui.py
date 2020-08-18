@@ -195,6 +195,8 @@ class WindowClass(QMainWindow, form_class) :
         if self.filename=='':return 0        
         try:self.inf.close()
         except:pass
+        
+        self.setWindowTitle(self.title + ' - ' +os.path.basename(self.filename))
         self.clearWindow()
         self.headerList=[]
         self.dialogNum=[]

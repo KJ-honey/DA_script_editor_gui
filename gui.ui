@@ -242,7 +242,7 @@
     <string>Exit</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Q</string>
+    <string>Ctrl+W</string>
    </property>
   </action>
   <action name="actionHelp">
