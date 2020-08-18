@@ -15,6 +15,8 @@ class WindowClass(QMainWindow, form_class) :
         self.setupUi(self)
         self.firstFileNumber=3520
         self.statusBar().showMessage('Ready')
+        self.title = 'DigimonAdventure Text packer'
+        self.setWindowTitle(self.title)
 
         self.btn_save.setDisabled(True)
         self.btn_insert.setDisabled(True)
@@ -82,7 +84,7 @@ class WindowClass(QMainWindow, form_class) :
     def clicked_btn_save(self): 
         if self.switchMode!='script':
             self.statusBar().showMessage('This is not a scriptfile')
-            return       
+            return 0
         myfunc.script_import_gui(self.headerList,self.dialogNum,self.texts,self.inf)
         self.statusBar().showMessage('Save complete')
         QMessageBox.information(self, 'Information', "Save complete", QMessageBox.Ok,QMessageBox.Ok)
@@ -90,7 +92,7 @@ class WindowClass(QMainWindow, form_class) :
     def save_as(self):        
         if self.switchMode!='script':
             self.statusBar().showMessage('This is not a scriptfile')
-            return       
+            return 0      
         myfilter="Bin files (*.bin);;All files (*.*)"
         savename=QFileDialog.getSaveFileName(self,'Save as...','./',myfilter,"Bin files (*.bin)")[0]
         if savename=='':return 0

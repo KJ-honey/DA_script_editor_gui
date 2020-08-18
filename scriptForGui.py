@@ -4,16 +4,18 @@ import pandas as pd
 import re
 def main():
     print(str_to_bin("Test str2bin mode 1 : 아아아아뷁",1))
-    
-    
-def test():
+    filename1='onlytext_test1.bin'
+    filename2='testExtBin.bin'
+    test(filename1)
+    test(filename2)    
+def test(fn):
         switcgMode='script'
         headerList=[]
         dialogNum=[]
         texts=[]
 
         #filename = QFileDialog.getOpenFileName(self)[0]
-        filename='onlytext_test1.bin'
+        filename=fn
         inf = open(filename,'rb+')
         data=inf.read()
 
@@ -22,10 +24,11 @@ def test():
 
 
         speakerAndDialogs=script_extract(headerList,dialogNum,inf) 
-
-        outfp=open('names.txt','w+')
-        for i in range(len(speakerAndDialogs[0])):
-            outfp.write(speakerAndDialogs[0][i]+'\n')
+        inf.close()
+        testStr=speakerAndDialogs[1][1000]
+        print(testStr)
+        print(str_to_bin(testStr,2))
+        
 def dataExtractorForISO(pathIso,pathFile):
     isoFp=open(pathIso,'rb')
     isoFp.seek(379666432)
@@ -249,6 +252,8 @@ def script_extract(headerList,dialogNum,inf):
                         length=text.find(b'\x00\x00')
                         if not length == -1:
                             text=text[0:length]
+                        else: text=text[0:len(text)-1]
+
                     dialogs[1].append(text)
                     break
                 except IndexError:
