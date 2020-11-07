@@ -1,6 +1,7 @@
 # DA_script_editor_gui
 ## Read me
 This is Digimon Adventure PSP script editor for Korean.
+Translated patch file's url : www.dgmkrtrans.tistory.com
 Main program is in the 'gui.py'using the python3.8.
 It is not complete so have some bugs.
 - How to use basic
